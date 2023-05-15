@@ -5,6 +5,12 @@ import { AppService } from './app.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { RoutesModule } from './routes/routes.module';
 import { Route } from './routes/routes.model';
+import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
+import { User } from './users/users.model';
+import { Role } from './roles/roles.model';
+import { UserRoles } from './roles/user-roles.model';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,10 +24,13 @@ import { Route } from './routes/routes.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.POSTGRES_DB,
-      models: [Route],
+      models: [Route, User, Role, UserRoles],
       autoLoadModels: true,
     }),
     RoutesModule,
+    UsersModule,
+    RolesModule,
+    AuthModule
   ],
   controllers: [AppController],
   providers: [AppService],

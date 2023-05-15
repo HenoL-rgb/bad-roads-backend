@@ -5,4 +5,5 @@ interface Route {
 
 export class RouteDto {
   readonly route: Route[];
+  readonly userId: number;
 }
