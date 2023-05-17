@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, Get, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Roles } from 'src/auth/roles-auth.decorator';
 import { RolesGuard } from 'src/auth/roles.guard';
@@ -22,6 +22,11 @@ export class RoutesController {
     return this.routeService.getAll();
   }
 
+  @Get('/user/:id')
+  getByUserId(@Param('id') id: number) {
+    return this.routeService.getByUserId(id)
+  }
+
   @Post('/delete')
   deleteRoute(@Body() route: {routeId: number}) {
     
@@ -36,5 +41,15 @@ export class RoutesController {
   @Post('/approve')
   approveRoute(@Body() route: {routeId: number}) {
     return this.routeService.approveRoute(route.routeId);
+  }
+
+  @Post('/like/:id')
+  likeRoute(@Param('id') id: number) {
+    return this.routeService.increaseRating(id);
+  }
+
+  @Post('/dislike/:id')
+  dislikeRoute(@Param('id') id: number) {
+    return this.routeService.decreaseRating(id);
   }
 }

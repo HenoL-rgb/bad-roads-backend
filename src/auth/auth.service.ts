@@ -97,7 +97,8 @@ export class AuthService {
 
     const userDto = new UserDto(user);
     const tokens = await this.generateTokens(userDto);
+    console.log('user', userDto);
     
-    return { ...tokens, userDto };
+    return { ...tokens, user: {...userDto, createdAt: user.createdAt} };
   }
 }

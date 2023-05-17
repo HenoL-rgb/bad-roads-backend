@@ -24,6 +24,9 @@ export class Route extends Model<Route, RouteCreationAttrs> {
   @Column({ type: DataType.BOOLEAN, defaultValue: false})
   isApproved: boolean;
 
+  @Column({ type: DataType.DOUBLE, defaultValue: 5.0})
+  rate: number;
+
   @ForeignKey(() => User)
   @Column({type: DataType.INTEGER})
   userId: number;

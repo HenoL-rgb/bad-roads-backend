@@ -11,6 +11,8 @@ import { User } from './users/users.model';
 import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
+import { LikesModule } from './likes/likes.module';
+import { LikesModule } from './likes/likes.module';
 
 @Module({
   imports: [
@@ -30,7 +32,8 @@ import { AuthModule } from './auth/auth.module';
     RoutesModule,
     UsersModule,
     RolesModule,
-    AuthModule
+    AuthModule,
+    LikesModule
   ],
   controllers: [AppController],
   providers: [AppService],

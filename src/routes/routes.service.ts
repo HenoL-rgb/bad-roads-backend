@@ -24,6 +24,16 @@ export class RoutesService {
     return routes;
   };
 
+  getByUserId = async (id: number) => {
+    const routes = await this.routeRepository.findAll({
+      where: {
+        userId: id,
+      },
+    });
+
+    return routes;
+  };
+
   deleteRoute = async (routeId: number) => {
     console.log(routeId);
 
@@ -62,6 +72,56 @@ export class RoutesService {
       const res = await this.routeRepository.update(
         {
           isApproved: true,
+        },
+        {
+          where: {
+            id: routeId,
+          },
+        },
+      );
+
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  decreaseRating = async (routeId: number) => {
+    try {
+      const route = await this.routeRepository.findByPk(routeId);
+
+      if (route.rate <= 0) {
+        return route;
+      }
+
+      const res = await this.routeRepository.update(
+        {
+          rate: route.rate - 0.1,
+        },
+        {
+          where: {
+            id: routeId,
+          },
+        },
+      );
+
+      return res;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  increaseRating = async (routeId: number) => {
+    try {
+      const route = await this.routeRepository.findByPk(routeId);
+
+      if(route.rate >= 5) {
+        return route;
+      }
+      
+      const res = await this.routeRepository.update(
+        {
+          rate: route.rate + 0.1,
         },
         {
           where: {
