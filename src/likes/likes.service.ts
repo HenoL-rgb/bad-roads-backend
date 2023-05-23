@@ -1,23 +1,67 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Dislike } from 'src/dislikes/dislikes.model';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
 import { Like } from './likes.model';
 
 @Injectable()
 export class LikesService {
-
-  constructor(@InjectModel(Like) private likeRepository: typeof Like){}
+  constructor(@InjectModel(Like) private likeRepository: typeof Like, @InjectModel(Dislike) private dislikeRepository: typeof Dislike) {}
 
   create = async (createLikeDto: CreateLikeDto) => {
     try {
+      const isExist = await this.likeRepository.findOne({
+        where: {
+          userId: createLikeDto.userId,
+          routeId: createLikeDto.routeId,
+        },
+      });
+      if (isExist) {
+        const res = await this.likeRepository.destroy({
+          where: {
+            userId: createLikeDto.userId,
+            routeId: createLikeDto.routeId,
+          },
+        });
+        
+        return res;
+      }
+
+      const isDisliked = await this.dislikeRepository.findOne({
+        where: {
+          userId: createLikeDto.userId,
+          routeId: createLikeDto.routeId,
+        },
+      });
+      if (isDisliked) {
+        const res = await this.dislikeRepository.destroy({
+          where: {
+            userId: createLikeDto.userId,
+            routeId: createLikeDto.routeId,
+          },
+        });
+        
+        return res;
+      }
+
       const res = await this.likeRepository.create({
-        ...createLikeDto
+        ...createLikeDto,
       });
       return res;
     } catch (e) {
       console.log(e);
     }
+  };
+
+  findByUserId(id: number) {
+    const userLikes = this.likeRepository.findAll({
+      where: {
+        userId: id,
+      },
+    });
+
+    return userLikes;
   }
 
   findAll() {

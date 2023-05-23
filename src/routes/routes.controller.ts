@@ -22,6 +22,11 @@ export class RoutesController {
     return this.routeService.getAll();
   }
 
+  @Get('/:id')
+  getById(@Param('id') id: number) {    
+    return this.routeService.getById(id);
+  }
+
   @Get('/user/:id')
   getByUserId(@Param('id') id: number) {
     return this.routeService.getByUserId(id)

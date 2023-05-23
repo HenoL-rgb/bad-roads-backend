@@ -12,7 +12,9 @@ import { Role } from './roles/roles.model';
 import { UserRoles } from './roles/user-roles.model';
 import { AuthModule } from './auth/auth.module';
 import { LikesModule } from './likes/likes.module';
-import { LikesModule } from './likes/likes.module';
+import { Like } from './likes/likes.model';
+import { Dislike } from './dislikes/dislikes.model';
+import { DislikesModule } from './dislikes/dislikes.module';
 
 @Module({
   imports: [
@@ -26,14 +28,15 @@ import { LikesModule } from './likes/likes.module';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.POSTGRES_DB,
-      models: [Route, User, Role, UserRoles],
+      models: [Route, User, Role, UserRoles, Like, Dislike],
       autoLoadModels: true,
     }),
     RoutesModule,
     UsersModule,
     RolesModule,
     AuthModule,
-    LikesModule
+    LikesModule,
+    DislikesModule
   ],
   controllers: [AppController],
   providers: [AppService],

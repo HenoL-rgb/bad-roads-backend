@@ -8,13 +8,19 @@ import { RolesModule } from 'src/roles/roles.module';
 import { UserRoles } from 'src/roles/user-roles.model';
 import { Role } from 'src/roles/roles.model';
 import { AuthModule } from 'src/auth/auth.module';
+import { Like } from 'src/likes/likes.model';
+import { LikesModule } from 'src/likes/likes.module';
+import { Dislike } from 'src/dislikes/dislikes.model';
+import { DislikesModule } from 'src/dislikes/dislikes.module';
 
 @Module({
   providers: [RoutesService],
   controllers: [RoutesController],
   imports: [
-    SequelizeModule.forFeature([Route, User, Role, UserRoles]),
+    SequelizeModule.forFeature([Route, User, Role, UserRoles, Like, Dislike]),
     RolesModule,
+    LikesModule,
+    DislikesModule,
     forwardRef(() => AuthModule),
   ]
 })

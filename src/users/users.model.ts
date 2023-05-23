@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger/dist';
 import { BelongsToMany, Column, DataType, HasMany, Model, Table } from 'sequelize-typescript';
+import { Dislike } from 'src/dislikes/dislikes.model';
+import { Like } from 'src/likes/likes.model';
 import { Role } from 'src/roles/roles.model';
 import { UserRoles } from 'src/roles/user-roles.model';
 import { Route } from 'src/routes/routes.model';
@@ -38,8 +40,15 @@ export class User extends Model<User, UserCreationAttrs> {
 
 
   @BelongsToMany(() => Role, () => UserRoles)
-  roles: Role[]
+  roles: Role[];
+
+  @BelongsToMany(() => Route, () => Like)
+  likes: Route[];
+
+  @BelongsToMany(() => Route, () => Dislike)
+  dislikes: Route[];
 
   @HasMany(() => Route)
   routes: Route[];
+
 }

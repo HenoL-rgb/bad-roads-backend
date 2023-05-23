@@ -3,12 +3,12 @@ import { LikesService } from './likes.service';
 import { CreateLikeDto } from './dto/create-like.dto';
 import { UpdateLikeDto } from './dto/update-like.dto';
 
-@Controller('likes')
+@Controller('api/routes/likes')
 export class LikesController {
   constructor(private readonly likesService: LikesService) {}
 
   @Post()
-  create(@Body() createLikeDto: CreateLikeDto) {
+  create(@Body() createLikeDto: CreateLikeDto) {    
     return this.likesService.create(createLikeDto);
   }
 
@@ -20,6 +20,11 @@ export class LikesController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.likesService.findOne(+id);
+  }
+
+  @Get('/user/:id')
+  findByUserId(@Param('id') id: number) {
+    return this.likesService.findByUserId(id);
   }
 
   @Patch(':id')

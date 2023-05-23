@@ -11,13 +11,13 @@ import {
 import { Route } from 'src/routes/routes.model';
 import { User } from 'src/users/users.model';
 
-interface LikeCreationAttrs {
+interface DislikeCreationAttrs {
   userId: number;
   routeId: number;
 }
 
-@Table({ tableName: 'likes' })
-export class Like extends Model<Like, LikeCreationAttrs> {
+@Table({ tableName: 'dislikes' })
+export class Dislike extends Model<Dislike, DislikeCreationAttrs> {
 
   @ApiProperty({ example: 1, description: 'route id' })
   @ForeignKey(() => Route)

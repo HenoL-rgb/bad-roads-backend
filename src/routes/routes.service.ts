@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Like } from 'src/likes/likes.model';
+import { User } from 'src/users/users.model';
 import { RouteDto } from './dto/RouteDto';
 import { UpdateRouteDto } from './dto/UpdateRouteDto';
 import { Route } from './routes.model';
@@ -20,8 +22,45 @@ export class RoutesService {
   };
 
   getAll = async () => {
-    const routes = await this.routeRepository.findAll();
+    const routes = await this.routeRepository.findAll({
+      include: [
+        {
+          association: 'likedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          association: 'dislikedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: []
+          }
+        },
+      ]
+    });
     return routes;
+  };
+
+  getById = async (id: number) => {
+    const route = await this.routeRepository.findByPk(id, {
+      include: [
+        {
+          association: 'likedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: []
+          }
+        },
+        {
+          association: 'author',
+          attributes: ['email']
+        },
+      ],
+    });    
+
+    return route;
   };
 
   getByUserId = async (id: number) => {
@@ -35,8 +74,6 @@ export class RoutesService {
   };
 
   deleteRoute = async (routeId: number) => {
-    console.log(routeId);
-
     const route = await this.routeRepository.destroy({
       where: {
         id: routeId,
@@ -48,11 +85,10 @@ export class RoutesService {
 
   updateRoute = async (route: UpdateRouteDto) => {
     try {
-      console.log(route);
-
       const res = await this.routeRepository.update(
         {
           route: JSON.stringify(route.points),
+          isApproved: false,
         },
         {
           where: {
@@ -115,10 +151,10 @@ export class RoutesService {
     try {
       const route = await this.routeRepository.findByPk(routeId);
 
-      if(route.rate >= 5) {
+      if (route.rate >= 5) {
         return route;
       }
-      
+
       const res = await this.routeRepository.update(
         {
           rate: route.rate + 0.1,

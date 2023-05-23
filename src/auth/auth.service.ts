@@ -22,6 +22,7 @@ export class AuthService {
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
     const tokens = await this.generateTokens(user);
+    
     return { ...tokens, user: new UserDto(user) };
   }
 
@@ -96,8 +97,9 @@ export class AuthService {
     const user = await this.userService.getUserById(userData.id)
 
     const userDto = new UserDto(user);
+    console.log(userDto);
+    
     const tokens = await this.generateTokens(userDto);
-    console.log('user', userDto);
     
     return { ...tokens, user: {...userDto, createdAt: user.createdAt} };
   }

@@ -8,6 +8,8 @@ export class UserDto {
     banReason: string;
     roles: Role[];
     routes: Route[];
+    likes: Route[];
+    dislikes: Route[];
 
     constructor(model) {
         this.email = model.email;
@@ -16,5 +18,7 @@ export class UserDto {
         this.banReason = model.banReason;
         this.roles = model.roles;
         this.routes = model.routes;
+        this.likes = model.likes;
+        this.dislikes = model.dislikes;
     }
 }
