@@ -35,7 +35,21 @@ export class UsersService {
             through: {
               attributes: []
             }
-          }
+          },
+          {
+            association: 'likes',
+            attributes: ['id'],
+            through: {
+              attributes: []
+            }
+          },
+          {
+            association: 'dislikes',
+            attributes: ['id'],
+            through: {
+              attributes: []
+            }
+          },
         ]})
         console.log(user);
         return user;
