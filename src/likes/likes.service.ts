@@ -7,7 +7,10 @@ import { Like } from './likes.model';
 
 @Injectable()
 export class LikesService {
-  constructor(@InjectModel(Like) private likeRepository: typeof Like, @InjectModel(Dislike) private dislikeRepository: typeof Dislike) {}
+  constructor(
+    @InjectModel(Like) private likeRepository: typeof Like,
+    @InjectModel(Dislike) private dislikeRepository: typeof Dislike,
+  ) {}
 
   create = async (createLikeDto: CreateLikeDto) => {
     try {
@@ -24,7 +27,7 @@ export class LikesService {
             routeId: createLikeDto.routeId,
           },
         });
-        
+
         return res;
       }
 
@@ -41,8 +44,6 @@ export class LikesService {
             routeId: createLikeDto.routeId,
           },
         });
-        
-        return res;
       }
 
       const res = await this.likeRepository.create({

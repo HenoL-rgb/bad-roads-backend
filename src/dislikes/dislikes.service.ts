@@ -43,8 +43,6 @@ export class DislikesService {
             routeId: createDislikeDto.routeId,
           },
         });
-        
-        return res;
       }
 
       const res = await this.dislikeRepository.create({

@@ -15,10 +15,9 @@ export class RefreshGuard implements CanActivate {
         try {
             const authHeader = req.headers.authorization;
             const [bearer, token] = authHeader.split(' ');
-            console.log(bearer);
             
             if(bearer !== 'Bearer' || !token) {
-                throw new UnauthorizedException({message: 'u r dolbobeb'});
+                throw new UnauthorizedException({message: 'Unauthorized'});
             } 
             const user = this.jwtService.verify(token);
             req.user = user;

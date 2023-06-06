@@ -1,7 +1,5 @@
 import { Body, Controller, Post, Get, UseGuards, Param } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { Roles } from 'src/auth/roles-auth.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
 import { RouteDto } from './dto/RouteDto';
 import { UpdateRouteDto } from './dto/UpdateRouteDto';
 import { RoutesService } from './routes.service';
@@ -46,15 +44,5 @@ export class RoutesController {
   @Post('/approve')
   approveRoute(@Body() route: {routeId: number}) {
     return this.routeService.approveRoute(route.routeId);
-  }
-
-  @Post('/like/:id')
-  likeRoute(@Param('id') id: number) {
-    return this.routeService.increaseRating(id);
-  }
-
-  @Post('/dislike/:id')
-  dislikeRoute(@Param('id') id: number) {
-    return this.routeService.decreaseRating(id);
   }
 }

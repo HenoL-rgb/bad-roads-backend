@@ -26,14 +26,14 @@ export class RolesGuard implements CanActivate {
             const [bearer, token] = authHeader.split(' ');
             
             if(bearer !== 'Bearer' || !token) {
-                throw new UnauthorizedException({message: 'u r dolbobeb'});
+                throw new UnauthorizedException({message: 'Unauthorized'});
             } 
             const user = this.jwtService.verify(token);
             req.user = user;
             
             return user.roles.some(role => requiredRoles.includes(role.value));
         } catch (error) {            
-            throw new HttpException("Not for u beach", HttpStatus.FORBIDDEN)
+            throw new HttpException("No permission", HttpStatus.FORBIDDEN)
         }
     }
 }

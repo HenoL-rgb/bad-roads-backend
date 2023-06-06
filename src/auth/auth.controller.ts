@@ -20,9 +20,7 @@ export class AuthController {
     }
 
     @Get('/refresh')
-    refresh(@Req() request: Request) {     
-        console.log('connected');
-        
+    refresh(@Req() request: Request) {             
         const token: any = request.headers.refresh;   
         return this.authService.refresh(token);
     }

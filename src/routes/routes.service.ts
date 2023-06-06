@@ -1,7 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Like } from 'src/likes/likes.model';
-import { User } from 'src/users/users.model';
 import { RouteDto } from './dto/RouteDto';
 import { UpdateRouteDto } from './dto/UpdateRouteDto';
 import { Route } from './routes.model';
@@ -11,9 +9,13 @@ export class RoutesService {
   constructor(@InjectModel(Route) private routeRepository: typeof Route) {}
   saveRoute = async (route: RouteDto) => {
     try {
+      if (route.route.length === 0) {
+        throw new BadRequestException({ message: 'Error while saving route' });
+      }
       const res = await this.routeRepository.create({
         route: JSON.stringify(route.route),
         userId: route.userId,
+        image: route.image,
       });
       return res;
     } catch (e) {
@@ -28,17 +30,17 @@ export class RoutesService {
           association: 'likedUsers',
           attributes: ['id'],
           through: {
-            attributes: []
-          }
+            attributes: [],
+          },
         },
         {
           association: 'dislikedUsers',
           attributes: ['id'],
           through: {
-            attributes: []
-          }
+            attributes: [],
+          },
         },
-      ]
+      ],
     });
     return routes;
   };
@@ -50,15 +52,15 @@ export class RoutesService {
           association: 'likedUsers',
           attributes: ['id'],
           through: {
-            attributes: []
-          }
+            attributes: [],
+          },
         },
         {
           association: 'author',
-          attributes: ['email']
+          attributes: ['email'],
         },
       ],
-    });    
+    });
 
     return route;
   };
@@ -108,56 +110,6 @@ export class RoutesService {
       const res = await this.routeRepository.update(
         {
           isApproved: true,
-        },
-        {
-          where: {
-            id: routeId,
-          },
-        },
-      );
-
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  decreaseRating = async (routeId: number) => {
-    try {
-      const route = await this.routeRepository.findByPk(routeId);
-
-      if (route.rate <= 0) {
-        return route;
-      }
-
-      const res = await this.routeRepository.update(
-        {
-          rate: route.rate - 0.1,
-        },
-        {
-          where: {
-            id: routeId,
-          },
-        },
-      );
-
-      return res;
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  increaseRating = async (routeId: number) => {
-    try {
-      const route = await this.routeRepository.findByPk(routeId);
-
-      if (route.rate >= 5) {
-        return route;
-      }
-
-      const res = await this.routeRepository.update(
-        {
-          rate: route.rate + 0.1,
         },
         {
           where: {

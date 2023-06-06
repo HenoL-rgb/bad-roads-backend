@@ -7,6 +7,7 @@ import { User } from 'src/users/users.model';
 
 interface RouteCreationAttrs {
   route: string;
+  image: string;
   userId: number;
 }
 
@@ -23,11 +24,11 @@ export class Route extends Model<Route, RouteCreationAttrs> {
   @Column({ type: DataType.TEXT, allowNull: false })
   route: string;
 
+  @Column({ type: DataType.TEXT, allowNull: false })
+  image: string;
+
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isApproved: boolean;
-
-  @Column({ type: DataType.DOUBLE, defaultValue: 5.0 })
-  rate: number;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.INTEGER })

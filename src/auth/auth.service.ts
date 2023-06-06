@@ -1,5 +1,4 @@
 import {
-  HttpCode,
   HttpException,
   HttpStatus,
   Injectable,
@@ -9,7 +8,6 @@ import { JwtService } from '@nestjs/jwt/dist';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcryptjs';
-import { User } from 'src/users/users.model';
 import { UserDto } from './dto/user-dto';
 
 @Injectable()
@@ -22,9 +20,8 @@ export class AuthService {
   async login(dto: CreateUserDto) {
     const user = await this.validateUser(dto);
     const tokens = await this.generateTokens(user);
-    console.log(user);
-    
-    return { ...tokens, user: new UserDto(user) };
+    const userDto = new UserDto(user);
+    return { ...tokens, user: {...userDto, createdAt: user.createdAt} };
   }
 
   async registration(dto: CreateUserDto) {
@@ -61,7 +58,7 @@ export class AuthService {
         return user;
       }
     } catch (error) {
-      throw new UnauthorizedException({ message: 'u r dolboeb' });
+      throw new UnauthorizedException({ message: 'Unauthorized' });
     }
   }
 
