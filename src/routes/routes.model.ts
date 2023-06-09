@@ -2,12 +2,13 @@ import { ApiProperty } from '@nestjs/swagger/dist';
 import { BelongsTo, BelongsToMany, ForeignKey, HasMany } from 'sequelize-typescript';
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 import { Dislike } from 'src/dislikes/dislikes.model';
+import { Image } from 'src/images/images.model';
 import { Like } from 'src/likes/likes.model';
 import { User } from 'src/users/users.model';
 
 interface RouteCreationAttrs {
   route: string;
-  image: string;
+  icon: string;
   userId: number;
 }
 
@@ -25,7 +26,7 @@ export class Route extends Model<Route, RouteCreationAttrs> {
   route: string;
 
   @Column({ type: DataType.TEXT, allowNull: false })
-  image: string;
+  icon: string;
 
   @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isApproved: boolean;

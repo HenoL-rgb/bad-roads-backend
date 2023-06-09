@@ -15,6 +15,8 @@ import { LikesModule } from './likes/likes.module';
 import { Like } from './likes/likes.model';
 import { Dislike } from './dislikes/dislikes.model';
 import { DislikesModule } from './dislikes/dislikes.module';
+import { ImagesModule } from './images/images.module';
+import { Image } from './images/images.model';
 
 @Module({
   imports: [
@@ -36,7 +38,7 @@ import { DislikesModule } from './dislikes/dislikes.module';
     RolesModule,
     AuthModule,
     LikesModule,
-    DislikesModule
+    DislikesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

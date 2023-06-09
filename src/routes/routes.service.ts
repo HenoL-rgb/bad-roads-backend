@@ -1,22 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { ImagesService } from 'src/images/images.service';
 import { RouteDto } from './dto/RouteDto';
 import { UpdateRouteDto } from './dto/UpdateRouteDto';
 import { Route } from './routes.model';
+import * as uuid from 'uuid'
 
 @Injectable()
 export class RoutesService {
-  constructor(@InjectModel(Route) private routeRepository: typeof Route) {}
+  constructor(
+    @InjectModel(Route) private routeRepository: typeof Route) {}
+
   saveRoute = async (route: RouteDto) => {
     try {
       if (route.route.length === 0) {
         throw new BadRequestException({ message: 'Error while saving route' });
       }
+      
       const res = await this.routeRepository.create({
         route: JSON.stringify(route.route),
         userId: route.userId,
-        image: route.image,
+        icon: route.icon,
       });
+      console.log(res);
+      
       return res;
     } catch (e) {
       console.log(e);
@@ -42,6 +49,7 @@ export class RoutesService {
         },
       ],
     });
+    
     return routes;
   };
 

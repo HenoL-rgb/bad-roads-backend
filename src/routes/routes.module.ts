@@ -12,6 +12,8 @@ import { Like } from 'src/likes/likes.model';
 import { LikesModule } from 'src/likes/likes.module';
 import { Dislike } from 'src/dislikes/dislikes.model';
 import { DislikesModule } from 'src/dislikes/dislikes.module';
+import { Image } from 'src/images/images.model';
+import { ImagesModule } from 'src/images/images.module';
 
 @Module({
   providers: [RoutesService],
