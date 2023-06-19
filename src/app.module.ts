@@ -17,9 +17,16 @@ import { Dislike } from './dislikes/dislikes.model';
 import { DislikesModule } from './dislikes/dislikes.module';
 import { ImagesModule } from './images/images.module';
 import { Image } from './images/images.model';
+import { ObstaclesModule } from './obstacles/obstacles.module';
+import { Obstacle } from './obstacles/obstacles.model';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'path'
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: path.resolve(__dirname, 'static'),
+    }),
     ConfigModule.forRoot({
       envFilePath: `.${process.env.NODE_ENV}.env`,
     }),
@@ -30,7 +37,7 @@ import { Image } from './images/images.model';
       username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASS,
       database: process.env.POSTGRES_DB,
-      models: [Route, User, Role, UserRoles, Like, Dislike],
+      models: [Route, User, Role, UserRoles, Like, Dislike, Obstacle, Image],
       autoLoadModels: true,
     }),
     RoutesModule,
@@ -39,6 +46,8 @@ import { Image } from './images/images.model';
     AuthModule,
     LikesModule,
     DislikesModule,
+    ObstaclesModule,
+    ImagesModule
   ],
   controllers: [AppController],
   providers: [AppService],

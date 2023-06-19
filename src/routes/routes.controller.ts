@@ -10,8 +10,7 @@ export class RoutesController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  saveRoute(@Body() route: RouteDto) {    
-    
+  saveRoute(@Body() route: RouteDto) {      
     return this.routeService.saveRoute(route);    
   }
 

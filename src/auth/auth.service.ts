@@ -21,6 +21,7 @@ export class AuthService {
     const user = await this.validateUser(dto);
     const tokens = await this.generateTokens(user);
     const userDto = new UserDto(user);
+    
     return { ...tokens, user: {...userDto, createdAt: user.createdAt} };
   }
 
@@ -44,13 +45,12 @@ export class AuthService {
 
   private async generateTokens(user: UserDto) {
     const payload = { email: user.email, id: user.id, roles: user.roles };
-    const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '15m'});
+    const accessToken = this.jwtService.sign(payload, { secret: process.env.JWT_ACCESS_SECRET, expiresIn: '10s'});
     const refreshToken = this.jwtService.sign(payload, {secret: process.env.JWT_REFRESH_SECRET, expiresIn: '7d'});
     return { accessToken, refreshToken };
   }
 
   private async validateUser(dto: CreateUserDto) {
-    console.log('validate user dto ', dto);
     try {
       const user = await this.userService.getUserByEmail(dto.email);
       const passwordEquals = await bcrypt.compare(dto.password, user.password);
@@ -82,20 +82,18 @@ export class AuthService {
 
   async refresh(refreshToken: string) {
     if(!refreshToken) {
-      return new UnauthorizedException({ message: 'Unauthorized' });
+      throw new UnauthorizedException({ message: 'Unauthorized' });
     }
-    console.log('got refresh', refreshToken);
     
     const userData: UserDto = this.validateRefreshToken(refreshToken);
 
     if(!userData) {
-      return new UnauthorizedException({message: 'Unauthorized'})
+      throw new UnauthorizedException({message: 'Unauthorized'})
     }
 
     const user = await this.userService.getUserById(userData.id)
 
     const userDto = new UserDto(user);
-    console.log('Info', userDto);
     
     const tokens = await this.generateTokens(userDto);
     

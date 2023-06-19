@@ -4,25 +4,73 @@ import { ImagesService } from 'src/images/images.service';
 import { RouteDto } from './dto/RouteDto';
 import { UpdateRouteDto } from './dto/UpdateRouteDto';
 import { Route } from './routes.model';
-import * as uuid from 'uuid'
+import * as uuid from 'uuid';
+import { Image } from 'src/images/images.model';
 
 @Injectable()
 export class RoutesService {
   constructor(
-    @InjectModel(Route) private routeRepository: typeof Route) {}
+    @InjectModel(Route) private routeRepository: typeof Route,
+    @InjectModel(Image) private imageRepository: typeof Image,
+    private fileService: ImagesService,
+  ) {}
+
+  getImages = async (route: RouteDto, createdRoute: Route) => {
+    const imagesPaths = route.images.map(async (image) => {
+      const path = await this.fileService.create(image);
+      console.log(path);
+      
+      await this.imageRepository.create({
+        routeId: createdRoute.id,
+        path: path,
+      });
+    });
+
+    return imagesPaths;
+  }
 
   saveRoute = async (route: RouteDto) => {
     try {
       if (route.route.length === 0) {
         throw new BadRequestException({ message: 'Error while saving route' });
       }
-      
-      const res = await this.routeRepository.create({
+
+      const createdRoute = await this.routeRepository.create({
         route: JSON.stringify(route.route),
         userId: route.userId,
         icon: route.icon,
+        obstacleId: route.obstacleId,
+        description: route.description,
       });
-      console.log(res);
+
+      const imagesPath = await this.getImages(route, createdRoute);
+
+
+      const res = await this.routeRepository.findByPk(createdRoute.id, {
+        include: [
+          {
+            association: 'likedUsers',
+            attributes: ['id'],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            association: 'dislikedUsers',
+            attributes: ['id'],
+            through: {
+              attributes: [],
+            },
+          },
+          {
+            association: 'images',
+            attributes: ['path']
+          }
+         
+        ],
+      });
+
+      console.log('res', res);
       
       return res;
     } catch (e) {
@@ -47,9 +95,13 @@ export class RoutesService {
             attributes: [],
           },
         },
+        {
+          association: 'obstacle',
+          attributes: ['id', 'icon', 'description'],
+        },
       ],
     });
-    
+
     return routes;
   };
 
@@ -64,9 +116,20 @@ export class RoutesService {
           },
         },
         {
+          association: 'dislikedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+        },
+        {
           association: 'author',
           attributes: ['email'],
         },
+        {
+          association: 'images',
+          attributes: ['path']
+        }
       ],
     });
 

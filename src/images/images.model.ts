@@ -7,7 +7,7 @@ import { Route } from 'src/routes/routes.model';
 import { User } from 'src/users/users.model';
 
 interface ImageCreationAttrs {
-  src: string;
+  path: string;
   routeId: number;
 }
 
@@ -15,7 +15,7 @@ interface ImageCreationAttrs {
 export class Image extends Model<Image, ImageCreationAttrs> {
 
   @Column({ type: DataType.TEXT, allowNull: false })
-  src: string;
+  path: string;
 
   @ForeignKey(() => Route)
   @Column({ type: DataType.INTEGER })

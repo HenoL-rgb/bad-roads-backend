@@ -14,15 +14,19 @@ import { Dislike } from 'src/dislikes/dislikes.model';
 import { DislikesModule } from 'src/dislikes/dislikes.module';
 import { Image } from 'src/images/images.model';
 import { ImagesModule } from 'src/images/images.module';
+import { Obstacle } from 'src/obstacles/obstacles.model';
+import { ObstaclesModule } from 'src/obstacles/obstacles.module';
 
 @Module({
   providers: [RoutesService],
   controllers: [RoutesController],
   imports: [
-    SequelizeModule.forFeature([Route, User, Role, UserRoles, Like, Dislike]),
+    SequelizeModule.forFeature([Route, User, Role, UserRoles, Like, Dislike, Obstacle, Image]),
     RolesModule,
     LikesModule,
     DislikesModule,
+    ObstaclesModule,
+    ImagesModule,
     forwardRef(() => AuthModule),
   ]
 })
