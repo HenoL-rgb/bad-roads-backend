@@ -19,7 +19,7 @@ export class RoutesService {
     const imagesPaths = route.images.map(async (image) => {
       const path = await this.fileService.create(image);
       console.log(path);
-      
+
       await this.imageRepository.create({
         routeId: createdRoute.id,
         path: path,
@@ -27,7 +27,7 @@ export class RoutesService {
     });
 
     return imagesPaths;
-  }
+  };
 
   saveRoute = async (route: RouteDto) => {
     try {
@@ -44,7 +44,6 @@ export class RoutesService {
       });
 
       const imagesPath = await this.getImages(route, createdRoute);
-
 
       const res = await this.routeRepository.findByPk(createdRoute.id, {
         include: [
@@ -64,14 +63,13 @@ export class RoutesService {
           },
           {
             association: 'images',
-            attributes: ['path']
-          }
-         
+            attributes: ['path'],
+          },
         ],
       });
 
       console.log('res', res);
-      
+
       return res;
     } catch (e) {
       console.log(e);
@@ -128,8 +126,12 @@ export class RoutesService {
         },
         {
           association: 'images',
-          attributes: ['path']
-        }
+          attributes: ['path'],
+        },
+        {
+          association: 'obstacle',
+          attributes: ['id', 'icon', 'description'],
+        },
       ],
     });
 
@@ -141,6 +143,34 @@ export class RoutesService {
       where: {
         userId: id,
       },
+      include: [
+        {
+          association: 'likedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          association: 'dislikedUsers',
+          attributes: ['id'],
+          through: {
+            attributes: [],
+          },
+        },
+        {
+          association: 'author',
+          attributes: ['email'],
+        },
+        {
+          association: 'images',
+          attributes: ['path'],
+        },
+        {
+          association: 'obstacle',
+          attributes: ['id', 'icon', 'description'],
+        },
+      ],
     });
 
     return routes;
